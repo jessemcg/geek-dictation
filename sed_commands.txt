@@ -1,17 +1,5 @@
 # word substitution
-s/\.26 hearing/section 366\.26 hearing/g
-s/IQUA/ICWA/g
-s/sush worker/social worker/g
-s/[Cc]ouncil/counsel/g
-s/Marzdon/Marsden/g
-s/waved/waived/g
-s/Polinski/Polinsky/g
-s/Palinski/Polinsky/g
-s/cancelled/canceled/g
-s/Miners/minor\'s/g
-s/The mother/Mother/g
-s/The father/Father/g
-s/readification/reunification/g
+s/spider/bug/g
 
 # word deletion
 s/\[BLANK_AUDIO\]//g
@@ -20,17 +8,6 @@ s/\[ Silence \}//g
 
 # style
 s/first amended/first-amended/g
-s/12 month/12-month/g
-s/six month/six-month/g
-s/6-month/six-month/g
-s/federally recognized/federally-recognized/g
-s/the Department/the department/g
-s/Section/section/g
-s/Miss/Ms\./g
-s/^ mother/ Mother/g
-s/^ father/ Father/g
-s/he Agency/he agency/g
-s/^ [Ww]e[^a-zA-Z0-9]re/ were/g
 
 # statutes
 s/\([Ss]ubdivision \)\([A-Z]\)\([1-9]\)/\L\1\(\2\)\(\3\)/g
@@ -44,7 +21,3 @@ s/^ //g
 
 # remove double period at the end
 s/\.\./\./g
-
-# after removing beginning space
-s/ Mother/ mother/g
-s/ Father/ father/g

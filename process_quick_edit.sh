@@ -2,8 +2,8 @@
 
 # Define file path variables (the "/dev/shm" direcory is in RAM, making file creation temporary and fast)
 AUDIO_FILE="/dev/shm/speech.wav"
-SED_COMMANDS="$HOME/Dropbox/MCGLAW/config_files/scripts/whisper/sed_commands.txt"
-LOG_FILE="$HOME/Dropbox/MCGLAW/config_files/scripts/whisper/logfile.txt"
+SED_COMMANDS="$HOME/sed_commands.txt"
+LOG_FILE="$HOME/logfile.txt"
 
 # Stop recording the audio file
 pkill pw-record
@@ -23,5 +23,5 @@ quick_edit=$(echo "$super_modified_output" | sed 's/./\L&/' | sed 's/\.\+$//' | 
 # Type the modified output with dotool using 5 millisecond delay to ensure accuracy
 { echo typedelay 5; echo type "$quick_edit"; } | dotool
 
-# Optional debugging to see what the default Whisper output looks like
+# Optional debugging to see what the default Whisper output looks like (and see whether the SED tweaks had their intended effect)
 #echo "$curl_output" >> "$LOG_FILE"

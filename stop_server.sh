@@ -1,4 +1,4 @@
 #!/bin/bash
 	
-# Stop the server runnig the Whisper model
+# Stop the the Whisper server
 pkill -f models/ggml
