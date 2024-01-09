@@ -34,7 +34,12 @@ Ubuntu
 	
 * Install dotool by downloading source code from [here](https://git.sr.ht/~geb/dotool) and follow the installation instructions. The part about setting udevdm device rules is important (see more about that on the manpage). You can test to see if dotool is working with something like this:
 
-	echo type hello | dotool 
+	echo type hello | dotool
+	
+### Place Geek-Dication in Home folder
+These instructions assume that all geek-dication scripts are in your home folder. For a quick way to so this:
+
+	git clone https://github.com/jessemcg/geek-dictation.git
 
 ### Program hotkeys with ckb-next
 * Install [ckb-next](https://github.com/ckb-next/ckb-next), which is a GUI based app that allows the user to assign functionality to keys or buttons on supported Corsair keyboards or mice.
@@ -47,7 +52,9 @@ Ubuntu
 
 	sudo apt-get install ckb-next
 	
-* For basic voice typing, choose a key
+* Open ckb-next. Navigate to your keyboard and click a key to use for general voicetyping. With the "Binding" dialogue open, choose the "Program" sub dialogue. Then type in the command for executing the "record.sh" script for the "on key press" press option. Make sure the "Single release" option is unchecked. Type in the command for executing the "process.sh" command for the "on key release" option. Make sure the "Single release" option is checked.
+
+<img src="ckb-next.png" alt="screenshot" style="width: 720; height: 215;">
 
 * For in-line voicetyping (like to edit just a few words), choose a different key
 
