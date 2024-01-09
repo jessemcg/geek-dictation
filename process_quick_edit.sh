@@ -2,8 +2,8 @@
 
 # Define file path variables (the "/dev/shm" direcory is in RAM, making file creation temporary and fast)
 AUDIO_FILE="/dev/shm/speech.wav"
-SED_COMMANDS="$HOME/sed_commands.txt"
-LOG_FILE="$HOME/logfile.txt"
+SED_COMMANDS="$HOME/geek-dictation/sed_commands.txt"
+LOG_FILE="$HOME/geek-dictation/logfile.txt"
 
 # Stop recording the audio file
 pkill pw-record
