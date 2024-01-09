@@ -48,8 +48,8 @@ Ubuntu
 
 	echo type hello | dotool
 	
-### Place Geek-Dication in Home folder
-All of these instructions assume that geek-dication scripts are in your home folder. For a quick way to so this:
+### Place Geek-Dictation in Home folder
+All of these instructions assume that geek-dictation scripts are in your home folder. For a quick way to so this:
 
 	git clone https://github.com/jessemcg/geek-dictation.git
 	
