@@ -41,7 +41,7 @@ All of these instructions assume that geek-dication scripts are in your home fol
 
 	git clone https://github.com/jessemcg/geek-dictation.git
 	
-Make sure the scripts are executible.
+Make sure the scripts are executable.
 
 	sudo chmod +x /$HOME/geek-dictation/*.sh
 
