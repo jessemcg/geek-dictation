@@ -6,6 +6,7 @@ Note: [pw-cat/pw-record](https://www.systutorials.com/docs/linux/man/1-pw-cat/) 
 
 ## Dependencies
 * whisper.cpp
+* ffmpeg (might already be installed)
 * dotool
 * go programming language
 * ckb-next
@@ -18,6 +19,17 @@ Note: [pw-cat/pw-record](https://www.systutorials.com/docs/linux/man/1-pw-cat/) 
 The documentation in [whisper.cpp](https://github.com/ggerganov/whisper.cpp) is fairly straight forward. For a reasonably powerful desktop computer, I would recommend the english small model, which isn't actually that small (tiny and base are smaller). For a notebook computer or an older desktop, base or tiny is probably better.
 
 The whisper.cpp documentation describes ways to further accelerate inference speed. Because I do not have a fancy GPU, I went with [openvino](https://github.com/openvinotoolkit/openvino). For those considering this approach, I have two thoughts. First, although openvino is an Intel project, it works just fine with AMD CPUs with an x86 architecture. Second, the version of openvino could matter. Through much trial and error, I learned that version 2023.0.0 (recommended by whisper.cpp) worked for my older Coffee Lake intel computer. However, I needed version 2023.2.0 for my newer Ryzen 9 7950X computer.
+
+## Install ffmpeg if not already installed
+ffmpeg is used to convert the recorded audio to a whisper compatible audio file (when starting the server, the -convert flag does this). Although the "record.sh" script uses pw-rec to record a wave file, the whisper model uses a very specific type of wave file.
+
+Fedora/RHEL
+
+	sudo dnf install ffmpeg
+	
+Ubuntu
+
+	sudo apt install ffmpeg
 
 ### Get dotool working.
 You will need an application that simulates keyboard input. Both [dotool](https://sr.ht/~geb/dotool/) and [ydotool](https://github.com/ReimuNotMoe/ydotool) work with [Wayland](https://wayland.freedesktop.org/), and either will work for this project. I prefer dotool because it seems much faster. In fact, I found it necessary to slow it down by five milliseconds to ensure accuracy (see process.sh). To get dotool working: 
@@ -54,7 +66,7 @@ Fedora/RHEL
 	
 Ubuntu
 
-	sudo apt-get install ckb-next
+	sudo apt install ckb-next
 	
 * Open ckb-next. Navigate to your keyboard and click on a key to use for general voicetyping. With the "Binding" dialogue open, choose the "Program" sub dialogue. Then type in the command for executing the "record.sh" script for the "on key press" option. Make sure the "Single release" option is unchecked. Then type in the command for executing the "process.sh" script for the "on key release" option. Make sure the "Single release" option is checked.
 
@@ -68,7 +80,11 @@ Ubuntu
 
 You can start and stop the whisper.cpp server with:
 
+Start Server
+
 	bash /$HOME/geek-dictation/start_server.sh
+	
+Stop Server
 	
 	bash /$HOME/geek-dictation/stop_server.sh
 
