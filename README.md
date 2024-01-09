@@ -19,7 +19,7 @@ The documentation in [whisper.cpp](https://github.com/ggerganov/whisper.cpp) is 
 
 The whisper.cpp documentation describes ways to further accelerate inference speed. Because I do not have a fancy GPU, I went with [openvino](https://github.com/openvinotoolkit/openvino). For those considering this approach, I have two thoughts. First, although openvino is an Intel project, it works just fine with AMD CPUs with an x86 architecture. Second, the version of openvino could matter. Through much trial and error, I learned that version 2023.0.0 (recommended by whisper.cpp) worked for my older Coffee Lake intel computer. However, I needed version 2023.2.0 for my newer Ryzen 9 7950X computer.
 
-## Install ffmpeg if not already installed
+### Install ffmpeg if not already installed
 ffmpeg is used to convert the recorded audio to a whisper compatible audio file (when starting the server, the -convert flag does this). Although the "record.sh" script uses pw-rec to record a wave file, the whisper model uses a very specific type of wave file.
 
 Fedora/RHEL
@@ -79,7 +79,6 @@ Ubuntu
 Add SED commands to the sed_commands.txt file to make any changes to spelling, grammer, style, etc. To determine whether a SED command is working as intended, you can uncomment the last line in the "process.sh" file and inspect the original whisper output in the resulting log file. Just compare that to the modified output. When creating SED commands, make sure you backslash symbols that could have meaning as bash code or regular expressions unless you intend for that regular expression to be operative. Consult GPT-4 for assistance.
 
 ### Optionally use an app or extenstion to launch the frequently used scripts not assigned to hotkeys
-
 You can start and stop the whisper.cpp server with:
 
 Start Server
