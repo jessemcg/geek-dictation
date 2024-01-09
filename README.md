@@ -44,7 +44,9 @@ Ubuntu
 
 	sudo apt install golang-go
 	
-* Install dotool by downloading source code from [here](https://git.sr.ht/~geb/dotool) and follow the instructions. The part about setting udevdm device rules is important (see more about that on the manpage). You can test to see if dotool is working with something like this:
+* Install dotool by downloading source code from [here](https://git.sr.ht/~geb/dotool) and follow the instructions. The part about setting udevdm device rules is important (see more about that on the manpage). 
+
+You can test to see if dotool is working with something like this:
 
 	echo type hello | dotool
 	
@@ -73,6 +75,8 @@ Ubuntu
 <img src="ckb-next.png" alt="screenshot" style="width: 600;">
 
 * For in-line voicetyping (like to edit just a few words), choose a different hotkey and follow the same steps. But for the "on key release" option, type in the command for executing the "process_quick_edit.sh" script. This ensures that the first word is not capitalized, and that there is no punctuation at the end.
+
+### Create custom SED commands
 
 * Add SED commands to the sed_commands.txt file to make any changes to spelling, grammer, style, etc. To determine whether a SED command is working as intended, you can uncomment the last line in the "process.sh" file and inspect the original whisper output in the resulting log file. Just compare that to the modified output. When creating SED commands, make sure you backslash symbols that could have meaning as bash code or regular expressions unless you intend for that regular expression to be operative. Consult GPT-4 for assistance.
 
