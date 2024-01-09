@@ -15,7 +15,7 @@ Note: [pw-cat/pw-record](https://www.systutorials.com/docs/linux/man/1-pw-cat/) 
 * curl (likely already installed)
 
 ## Getting Started
-### Set up a GGML optimized whisper model.
+### Set up a GGML optimized whisper model
 The documentation in [whisper.cpp](https://github.com/ggerganov/whisper.cpp) is fairly straight forward. For a reasonably powerful desktop computer, I would recommend the english small model, which isn't actually that small (tiny and base are smaller). For a notebook computer or an older desktop, base or tiny is probably better.
 
 The whisper.cpp documentation describes ways to further accelerate inference speed. Because I do not have a fancy GPU, I went with [openvino](https://github.com/openvinotoolkit/openvino). For those considering this approach, I have two thoughts. First, although openvino is an Intel project, it works just fine with AMD CPUs with an x86 architecture. Second, the version of openvino could matter. Through much trial and error, I learned that version 2023.0.0 (recommended by whisper.cpp) worked for my older Coffee Lake intel computer. However, I needed version 2023.2.0 for my newer Ryzen 9 7950X computer.
@@ -31,7 +31,7 @@ Ubuntu
 
 	sudo apt install ffmpeg
 
-### Get dotool working.
+### Get dotool working
 You will need an application that simulates keyboard input. Both [dotool](https://sr.ht/~geb/dotool/) and [ydotool](https://github.com/ReimuNotMoe/ydotool) work with [Wayland](https://wayland.freedesktop.org/), and either will work for this project. I prefer dotool because it seems much faster. In fact, I found it necessary to slow it down by five milliseconds to ensure accuracy (see process.sh). To get dotool working: 
 
 * First install the go programming language if not already installed
