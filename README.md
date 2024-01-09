@@ -58,7 +58,7 @@ Ubuntu
 	
 * Open ckb-next. Navigate to your keyboard and click on a key to use for general voicetyping. With the "Binding" dialogue open, choose the "Program" sub dialogue. Then type in the command for executing the "record.sh" script for the "on key press" option. Make sure the "Single release" option is unchecked. Then type in the command for executing the "process.sh" script for the "on key release" option. Make sure the "Single release" option is checked.
 
-<img src="ckb-next.png" alt="screenshot" style="width: 720; height: 215;">
+<img src="ckb-next.png" alt="screenshot" style="width: 700; height: 195;">
 
 * For in-line voicetyping (like to edit just a few words), choose a different hotkey and follow the same steps. But for the "on key release" option, type in the command for executing the "process_quick_edit.sh" script. This ensures that the first word is not capitalized, and that there is no punctuation at the end.
 
