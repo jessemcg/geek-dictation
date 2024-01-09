@@ -52,13 +52,13 @@ Ubuntu
 
 	sudo apt-get install ckb-next
 	
-* Open ckb-next. Navigate to your keyboard and click a key to use for general voicetyping. With the "Binding" dialogue open, choose the "Program" sub dialogue. Then type in the command for executing the "record.sh" script for the "on key press" press option. Make sure the "Single release" option is unchecked. Type in the command for executing the "process.sh" command for the "on key release" option. Make sure the "Single release" option is checked.
+* Open ckb-next. Navigate to your keyboard and click a key to use for general voicetyping. With the "Binding" dialogue open, choose the "Program" sub dialogue. Then type in the command for executing the "record.sh" script for the "on key press" press option. Make sure the "Single release" option is unchecked. Then type in the command for executing the "process.sh" script for the "on key release" option. Make sure the "Single release" option is checked.
 
 <img src="ckb-next.png" alt="screenshot" style="width: 720; height: 215;">
 
-* For in-line voicetyping (like to edit just a few words), choose a different key
+* For in-line voicetyping (like to edit just a few words), choose a different hot key and follow the same steps. But for the "on key release" option, type in the command for executing the "process_quick_edit.sh" script.
 
-* Add SED commands to the sed_commands.txt file to make any changes to spelling, grammer, style, etc. To determine whether a SED command is working as intended, you can uncomment the last line in the process.sh file and inspect the original Whisper output in the log file. Just compare that to the modified output.
+* Add SED commands to the sed_commands.txt file to make any changes to spelling, grammer, style, etc. To determine whether a SED command is working as intended, you can uncomment the last line in the "process.sh" file and inspect the original Whisper output in the resulting log file. Just compare that to the modified output. When creating SED commands, make sure you backslash symbols that could have meaning as bash code or regular expressions unless you intend for that regular expression to be operative. Consult GPT-4 for assistance.
 
 ### Optionally use an app or extenstion to launch the frequently used scripts not assigned to hotkeys
  
