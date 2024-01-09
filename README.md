@@ -65,6 +65,12 @@ Ubuntu
 * Add SED commands to the sed_commands.txt file to make any changes to spelling, grammer, style, etc. To determine whether a SED command is working as intended, you can uncomment the last line in the "process.sh" file and inspect the original Whisper output in the resulting log file. Just compare that to the modified output. When creating SED commands, make sure you backslash symbols that could have meaning as bash code or regular expressions unless you intend for that regular expression to be operative. Consult GPT-4 for assistance.
 
 ### Optionally use an app or extenstion to launch the frequently used scripts not assigned to hotkeys
- 
-If you use geek-dictation daily, you may want to use a script launching app to start the Whisper.cpp server, to stop the server, and to edit the sed_commands.txt file. For gnome, the [Launcher](https://extensions.gnome.org/extension/5874/launcher/) extension is a good option. 
+
+You can start and stop the Whisper.cpp server with:
+
+	bash /$HOME/geek-dictation/start_server.sh
+	
+	bash /$HOME/geek-dictation/stop_server.sh
+
+However, if you use geek-dictation daily, you may want to use a script launching app to start the Whisper.cpp server, to stop the server, and to edit the sed_commands.txt file. For gnome, the [Launcher](https://extensions.gnome.org/extension/5874/launcher/) extension is a good option. 
 
