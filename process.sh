@@ -9,7 +9,7 @@ LOG_FILE="$HOME/geek-dictation/log_file.txt"
 pkill pw-record
 
 # Send curl request to running Whisper server and store text information in variable
-curl_output=$(curl 127.0.0.1:8080/inference -H "Content-Type: multipart/form-data" -F file=@"$AUDIO_FILE" -F response-format="text")
+curl_output=$(curl 127.0.0.1:8080/inference -H "Content-Type: multipart/form-data" -F file=@"$AUDIO_FILE" -F response_format="text")
 
 # Use SED to remove all line breaks
 modified_output=$(echo "$curl_output" | sed ':a;N;$!ba;s/\n//g')
