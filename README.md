@@ -23,7 +23,7 @@ April 25, 2024 update: Now compiling with openvino toolkit 2023.2.0 (rhel) works
 
     sudo dnf install tbb-doc
     
-These files were taken from Fedora 39 and placed back where they used to be in Fedora 40:
+These files were taken from Fedora 39 and copied to their orginal location to make Fedora 40 work:
 
     /usr/lib64/libtbb.so.2
     /usr/lib64/libtbbmalloc.so.2
