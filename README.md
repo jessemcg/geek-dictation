@@ -19,11 +19,11 @@ The documentation in [whisper.cpp](https://github.com/ggerganov/whisper.cpp) is 
 
 The whisper.cpp documentation describes ways to further accelerate inference speed. Because I do not have a fancy GPU, I went with [openvino](https://github.com/openvinotoolkit/openvino). For those considering this approach, I have two thoughts. First, although openvino is an Intel project, it works just fine with AMD CPUs with an x86 architecture. Second, the version of openvino could matter. Through much trial and error, I learned that version 2023.0.0 (recommended by whisper.cpp) worked for my older Coffee Lake intel computer. However, I needed version 2023.2.0 for my newer Ryzen 9 7950X computer.
 
-April 25, 2024 update: Now compiling with openvino toolkit 2023.2.0 (rhel) works for both computers, but after Fedora updated to version 40 and messed with packaging for the shared library TBB (Threading Building Blocks), I had to install development version of tbb and move some of the old tbb files back where the used to be:
+April 25, 2024 update: Now compiling with openvino toolkit 2023.2.0 (rhel) works for both computers, but after Fedora updated to version 40 and messed with packaging for the shared library TBB (Threading Building Blocks), I had to install development version of tbb and move some of the old tbb files back where they used to be:
 
     sudo dnf install tbb-doc
     
-These files were taken from Fedora 39 and placed back where they used to be:
+These files were taken from Fedora 39 and placed back where they used to be in Fedora 40:
 
     /usr/lib64/libtbb.so.2
     /usr/lib64/libtbbmalloc.so.2
