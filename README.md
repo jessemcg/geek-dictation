@@ -3,6 +3,8 @@ Inspired by [nerd-dictation](https://github.com/ideasman42/nerd-dictation), this
 
 Note: [pw-cat/pw-record](https://www.systutorials.com/docs/linux/man/1-pw-cat/) is the key to making this work. The second script triggered by releasing the hotkey kills pw-rec and begins sending the resulting wave file to the Whisper model. Doing this with other recording options in linux, such as sox, results in deleting about two seconds from the end of the audio file. This can be fixed by adding a two-second delay in the script, but that defeats the goal of making the entire process fast. When pw-rec is killed, the entire audio file remains intact. I think this has something to do with pw-rec's lower latency recording.
 
+[screencast.webm](https://github.com/jessemcg/geek-dictation/assets/35084599/f838e6ad-2bcf-4f53-b78f-62596a8fccd0)
+
 ## Dependencies
 * whisper.cpp
 * ffmpeg (might already be installed)
