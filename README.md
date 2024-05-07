@@ -3,7 +3,7 @@ Inspired by [nerd-dictation](https://github.com/ideasman42/nerd-dictation), this
 
 Note: [pw-cat/pw-record](https://www.systutorials.com/docs/linux/man/1-pw-cat/) is the key to making this work. The second script triggered by releasing the hotkey kills pw-rec and begins sending the resulting wave file to the Whisper model. Doing this with other recording options in linux, such as sox, results in deleting about two seconds from the end of the audio file. This can be fixed by adding a two-second delay in the script, but that defeats the goal of making the entire process fast. When pw-rec is killed, the entire audio file remains intact. I think this has something to do with pw-rec's lower latency recording.
 
-[screencast.webm](https://github.com/jessemcg/geek-dictation/assets/35084599/42148369-76e5-4339-9b15-22dc8c73f7e2)
+https://github.com/jessemcg/geek-dictation/assets/35084599/c65073b2-48d8-452b-841d-6e857215ee3b
 
 Note: Two different sets of SED commands are used in this example (one for the main text and one for the citations). Each is tied to a different key.
 
