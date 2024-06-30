@@ -33,6 +33,7 @@ These files were taken from Fedora 39 and copied to their orginal location to ma
     /usr/lib64/libtbbmalloc.so.2
     /usr/lib64/libtbbmalloc_proxy.so.2
     
+### Optionally Use Whisperfile
 Or you can go the easy way and simply download a ready-to-go executible from, [whiperfile](https://github.com/cjpais/whisperfile), which is based on the brilliant work of Mozilla and [llamafile](https://github.com/Mozilla-Ocho/llamafile). They have found a way to "collapses all the complexity of LLMs down to a single-file," and it works on almost any computer.
 
 The downside is that you do not get the accelerated inference speed that results from compiling with openvino. In my testing, there is about a 30% decrease in speed. One option could be to start using geek-dictation with whisperfile, then if you want that little bit of extra speed, compile your own executible with [whisper.cpp](https://github.com/ggerganov/whisper.cpp) and openvino.
