@@ -17,8 +17,11 @@ modified_output=$(echo "$curl_output" | sed ':a;N;$!ba;s/\n//g')
 # Use SED to further modify text by referencing list of SED commands in a separate text file
 super_modified_output=$(echo "$modified_output" | sed -f "$SED_COMMANDS")
 
-# Type the modified output with dotool using 5 millisecond delay to ensure accuracy
-{ echo typedelay 5; echo type "$super_modified_output"; } | dotool
+# Load contents of final variable onto clipboard
+echo -n "$super_modified_output" | wl-copy
+
+# Use ydotool to paste the contents of the clipboard
+ydotool key 29:1 47:1 47:0 29:0
 
 # Optional debugging to see what the default Whisper output looks like (and see whether the SED tweaks had their intended effect)
 #echo "$curl_output" >> "$LOG_FILE"

@@ -1,5 +1,5 @@
 # geek-dictation
-Inspired by [nerd-dictation](https://github.com/ideasman42/nerd-dictation), this is a hackable way to implement voice typing on linux. Instead of python, this implementation uses a set of bash scripts. It uses one of Open AI's [Whisper models](https://github.com/openai/whisper) that has been converted and optimized with [whisper.cpp](https://github.com/ggerganov/whisper.cpp). The model is run in server mode, then utilized with a curl command that sends it audio recorded with [pw-cat](https://www.systutorials.com/docs/linux/man/1-pw-cat/) (pipewire) using hotkeys programmed with [ckb-next](https://github.com/ckb-next/ckb-next). The text is typed with [dotool](https://sr.ht/~geb/dotool/) after it has been processed with custom SED commands (all in memory). A similar approach is [voice_typing](https://github.com/themanyone/voice_typing). The advantage with geek-dictation is speed, customization (with the SED commands), and the ability to pause as long as you want while recording your audio.
+Inspired by [nerd-dictation](https://github.com/ideasman42/nerd-dictation), this is a hackable way to implement voice typing on linux. Instead of python, this implementation uses a set of bash scripts. It uses one of Open AI's [Whisper models](https://github.com/openai/whisper) that has been converted and optimized with [whisper.cpp](https://github.com/ggerganov/whisper.cpp). The model is run in server mode, then utilized with a curl command that sends it audio recorded with [pw-cat](https://www.systutorials.com/docs/linux/man/1-pw-cat/) (pipewire) using hotkeys programmed with [ckb-next](https://github.com/ckb-next/ckb-next). The text is pasted using [ydotool](https://github.com/ReimuNotMoe/ydotool) after it has been processed with custom SED commands (all in memory). A similar approach is [voice_typing](https://github.com/themanyone/voice_typing). The advantage with geek-dictation is speed, customization (with the SED commands), and the ability to pause as long as you want while recording your audio.
 
 Note: [pw-cat/pw-record](https://www.systutorials.com/docs/linux/man/1-pw-cat/) is the key to making this work. The second script triggered by releasing the hotkey kills pw-rec and begins sending the resulting wave file to the Whisper model. Doing this with other recording options in linux, such as sox, results in deleting about two seconds from the end of the audio file. This can be fixed by adding a two-second delay in the script, but that defeats the goal of making the entire process fast. When pw-rec is killed, the entire audio file remains intact. I think this has something to do with pw-rec's lower latency recording.
 
@@ -10,12 +10,11 @@ Note: Two different sets of SED commands are used in this example (one for the m
 ## Dependencies
 * whisper.cpp
 * ffmpeg (might already be installed)
-* dotool
-* go programming language
+* wl-clipboard
 * ckb-next
 * a keyboard or mouse compatible with ckb-next
 * pw-cat/pw-rec (likely already installed)
-* curl (likely already installed)
+* curl (almost certainly already installed)
 
 ## Getting Started
 ### Set up a GGML optimized whisper model
@@ -49,24 +48,70 @@ Ubuntu
 
 	sudo apt install ffmpeg
 
-### Get dotool working
-You will need an application that simulates keyboard input. Both [dotool](https://sr.ht/~geb/dotool/) and [ydotool](https://github.com/ReimuNotMoe/ydotool) work with [Wayland](https://wayland.freedesktop.org/), and either will work for this project. I prefer dotool because it seems much faster. In fact, I found it necessary to slow it down by five milliseconds to ensure accuracy (see process.sh). To get dotool working: 
-
-* First install the go programming language if not already installed
+### Install wl-clipboard
 
 Fedora/RHEL
 
-	sudo dnf install golang
+	sudo dnf install wl-clipboard
 
 Ubuntu
 
-	sudo apt install golang-go
+	sudo apt install wl-clipboard
+
+### Get ydotool working
+
+You will need an application that can simulate the keyboard function for pasting the contents of the clipboard into something that is not just a terminal (control+c). I have found that [ydotool](https://github.com/ReimuNotMoe/ydotool) works best for this. Like other projects, I used to use a keyboard simulation app to type all of the converted text. However, because geek-dictation processes all of an audio file at once, it is possible and faster to just paste the converted text into the word processor.
 	
-* Install dotool by downloading source code from [here](https://git.sr.ht/~geb/dotool) and follow the instructions. The part about setting udevdm device rules is important (see more about that on the manpage). 
+* Install [ydotool](https://github.com/ReimuNotMoe/ydotool)
 
-You can test to see if dotool is working with something like this:
+Fedora/RHEL
 
-	echo type hello | dotool
+	sudo dnf install ydotool
+
+Ubuntu
+
+	sudo apt install ydotool
+
+Create a systemd service to give ydotool ongong permission without needing to type sudo
+
+	sudo nano /etc/systemd/system/ydotool-permissions.service
+
+Add the following content to the service file while replacing "user" with your actual user name:
+
+	[Unit]
+	Description=Set permissions for ydotool socket
+	After=ydotoold.service
+
+	[Service]
+	Type=oneshot
+	ExecStart=/bin/chown user:user /tmp/.ydotool_socket
+	ExecStartPost=/bin/chmod 660 /tmp/.ydotool_socket
+
+	[Install]
+	WantedBy=default.target
+
+Reload systemd and enable the service
+
+	sudo systemctl daemon-reload
+	sudo systemctl enable ydotool-permissions.service
+	sudo systemctl start ydotool-permissions.service
+
+Verify the service
+
+	sudo systemctl status ydotool-permissions.service
+
+Reboot and check permissions
+
+	sudo reboot
+	ls -l /tmp/.ydotool_socket
+
+You should see that the file is owned by you with the appropriate permissions.
+
+Test in terminal
+
+	ydotool type 'hello world'
+
+Now you should be able to use ydotool in your scripts
 	
 ### Place Geek-Dictation in Home folder
 All of these instructions assume that geek-dictation scripts are in your home folder. For a quick way to so this:
