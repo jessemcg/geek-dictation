@@ -18,11 +18,19 @@ Note: Two different sets of SED commands are used in this example (one for the m
 
 ## Getting Started
 ### Set up a GGML optimized whisper model
-The documentation in [whisper.cpp](https://github.com/ggerganov/whisper.cpp) is fairly straight forward. For a reasonably powerful desktop computer, I would recommend the english small model, which isn't actually that small (tiny and base are smaller). For a notebook computer or an older desktop, base or tiny is probably better.
+The documentation in [whisper.cpp](https://github.com/ggerganov/whisper.cpp) is fairly straight forward. If using a Cuda enabled Nvidia GPU, I recommend the largest model. If using a CPU for inference, I recommend the English small model or the English base model.
 
-The whisper.cpp documentation describes ways to further accelerate inference speed. Because I do not have a fancy GPU, I went with [openvino](https://github.com/openvinotoolkit/openvino). For those considering this approach, I have two thoughts. First, although openvino is an Intel project, it works just fine with AMD CPUs with an x86 architecture. Second, the version of openvino could matter. Through much trial and error, I learned that version 2023.0.0 (recommended by whisper.cpp) worked for my older Coffee Lake intel computer. However, I needed version 2023.2.0 for my newer Ryzen 9 7950X computer.
+#### Compiling for Cuda Enabled GPU
 
-April 25, 2024 update: Now compiling with openvino toolkit 2023.2.0 (rhel) works for both computers, but after Fedora updated to version 40 and messed with packaging for the shared library TBB (Threading Building Blocks), I had to install development version of tbb and move some of the old tbb files back where they used to be:
+The whisper.cpp documentation describes ways to further accelerate inference speed. If at all possible, I highly recommend compiling for use with a Cuda enabled Nvidia GPU. This will allow you to run the largest whisper model with near-instant speech to text translation. The above example was done with an RTX 4090 (overkill but I am also running a local LLM).
+
+You will need both the Nvidia driver and the Cuda toolkit installed. Your GPU will probably need atleast 6 gigabites of VRAM. If you are on Fedora Linux, you can avoid a lot of headache by using Fedora 39 (not 40) because it is sure to work with the driver and has the older GCC compiler that the Cuda toolkit requires. In addition, only install the Nvidia driver from the [Fusion Nonfree Repository](https://rpmfusion.org/Howto/NVIDIA). The Cuda toolkit can be installed from the Nvidia servers. See [Fedora Cuda Instructions](https://rpmfusion.org/Howto/CUDA).
+
+#### Compiling with Openvino for CPU inference
+
+For CPU inference, you can use [openvino](https://github.com/openvinotoolkit/openvino). Openvino is an Intel project, but it works just fine with AMD CPUs with an x86 architecture. 
+
+I was able to get openvino working with Fedora 40 and openvino toolkit 2023.2.0 (labeled rhel). However, because Fedora 40 changed the packaging for the shared library TBB (Threading Building Blocks), I had to install the development version of tbb and move some of the old tbb files back where they used to be:
 
     sudo dnf install tbb-doc
     
@@ -32,10 +40,10 @@ These files were taken from Fedora 39 and copied to their orginal location to ma
     /usr/lib64/libtbbmalloc.so.2
     /usr/lib64/libtbbmalloc_proxy.so.2
     
-### Optionally Use Whisperfile
-Or you can go the easy way and simply download a ready-to-go executible from, [whiperfile](https://github.com/cjpais/whisperfile), which is based on the brilliant work of Mozilla and [llamafile](https://github.com/Mozilla-Ocho/llamafile). They have found a way to "collapses all the complexity of LLMs down to a single-file," and it works on almost any computer.
+#### Optionally Use Whisperfile
+You can also download a ready-to-go executible from [whiperfile](https://github.com/cjpais/whisperfile), which is based on the work of Mozilla and [llamafile](https://github.com/Mozilla-Ocho/llamafile). They have found a way to "collapses all the complexity of LLMs down to a single-file," and it works on almost any computer.
 
-The downside is that you do not get the accelerated inference speed that results from compiling with openvino. In my testing, there is about a 30% decrease in speed. One option could be to start using geek-dictation with whisperfile, then if you want that little bit of extra speed, compile your own executible with [whisper.cpp](https://github.com/ggerganov/whisper.cpp) and openvino.
+The performance is probably not quite as good as if you compiled whisper.cpp yourself. When I tested whisperfile with openivo on the CPU, there was about a 30% decrease in speed. One option could be to start using geek-dictation with whisperfile, then if you want that little bit of extra speed, compile your own executible with [whisper.cpp](https://github.com/ggerganov/whisper.cpp) and openvino. This probably only makes sense for CPU inference since compiling for a Cuda enabled GPU is so easy (literally just one command).
 
 ### Install ffmpeg if not already installed
 ffmpeg is used to convert the recorded audio to a whisper compatible audio file (when starting the server, the -convert flag does this). Although the "record.sh" script uses pw-rec to record a wave file, the whisper model uses a very specific type of wave file.
@@ -64,54 +72,7 @@ You will need an application that can simulate the keyboard function for pasting
 	
 * Install [ydotool](https://github.com/ReimuNotMoe/ydotool)
 
-Fedora/RHEL
-
-	sudo dnf install ydotool
-
-Ubuntu
-
-	sudo apt install ydotool
-
-Create a systemd service to give ydotool ongong permission without needing to type sudo
-
-	sudo nano /etc/systemd/system/ydotool-permissions.service
-
-Add the following content to the service file while replacing "user" with your actual user name:
-
-	[Unit]
-	Description=Set permissions for ydotool socket
-	After=ydotoold.service
-
-	[Service]
-	Type=oneshot
-	ExecStart=/bin/chown user:user /tmp/.ydotool_socket
-	ExecStartPost=/bin/chmod 660 /tmp/.ydotool_socket
-
-	[Install]
-	WantedBy=default.target
-
-Reload systemd and enable the service
-
-	sudo systemctl daemon-reload
-	sudo systemctl enable ydotool-permissions.service
-	sudo systemctl start ydotool-permissions.service
-
-Verify the service
-
-	sudo systemctl status ydotool-permissions.service
-
-Reboot and check permissions
-
-	sudo reboot
-	ls -l /tmp/.ydotool_socket
-
-You should see that the file is owned by you with the appropriate permissions.
-
-Test in terminal
-
-	ydotool type 'hello world'
-
-Now you should be able to use ydotool in your scripts
+* You will also need to set up a dbus service on linux to give the ydotool deamon ongoing permission to run on start up. I cannot reliably list all the steps. Please ask GPT-4 or Claude to walk you through it.
 	
 ### Place Geek-Dictation in Home folder
 All of these instructions assume that geek-dictation scripts are in your home folder. For a quick way to so this:
