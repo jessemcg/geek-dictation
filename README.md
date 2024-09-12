@@ -5,8 +5,6 @@ Note: [pw-cat/pw-record](https://www.systutorials.com/docs/linux/man/1-pw-cat/) 
 
 https://github.com/jessemcg/geek-dictation/assets/35084599/0e632182-c971-4b7f-a458-5051ba299ae5
 
-Note: Two different sets of SED commands are used in this example (one for the main text and one for the citations). Each is tied to a different key.
-
 ## Dependencies
 * whisper.cpp
 * ffmpeg (might already be installed)
