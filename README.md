@@ -122,11 +122,13 @@ Paste the following into that file:
 8. Enable and start the user service
 
 	systemctl --user daemon-reload
+	
 	systemctl --user enable --now ydotoold
 	
 9. Check status and test
 
 	systemctl --user status ydotoold
+	
 	ydotool type "Hello from Wayland!"
 	
 If it types the text somewhere (e.g., in your terminal), you’ve confirmed it works on your Wayland setup.
@@ -137,7 +139,7 @@ On Ubuntu, users do not have default write permissions for the /dev/shm director
 
 	sudo gedit /etc/fstab
 	
-Please this line at the bottom, save, and reboot:
+Paste this line at the bottom, save, and reboot:
 
 	tmpfs /dev/shm tmpfs rw,exec,inode64 0 0
 	
