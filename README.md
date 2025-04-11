@@ -14,7 +14,7 @@ Note: Two different sets of SED commands are used in this example (one for the m
 * ckb-next
 * a keyboard or mouse compatible with ckb-next
 * pw-cat/pw-rec (likely already installed)
-* curl (almost certainly already installed)
+* curl (likely installed already)
 
 ## Getting Started
 ### Set up a GGML optimized whisper model
@@ -22,57 +22,124 @@ The documentation in [whisper.cpp](https://github.com/ggerganov/whisper.cpp) is 
 
 #### Compiling for Cuda Enabled GPU
 
-The whisper.cpp documentation describes ways to further accelerate inference speed. If at all possible, I highly recommend compiling for use with a Cuda enabled Nvidia GPU. This will allow you to run the largest whisper model with near-instant speech to text translation. The above example was done with an RTX 4090 (overkill but I am also running a local LLM).
+The whisper.cpp documentation describes ways to further accelerate inference speed. If at all possible, I highly recommend compiling for use with a Cuda enabled Nvidia GPU. This will allow you to run the largest whisper model with near-instant speech to text translation. The above example was done with an RTX 4090.
 
-You will need both the Nvidia driver and the Cuda toolkit installed. Your GPU will probably need atleast 6 gigabites of VRAM. If you are on Fedora Linux, you can avoid a lot of headache by using Fedora 39 (not 40) because it is sure to work with the driver and has the older GCC compiler that the Cuda toolkit requires. In addition, only install the Nvidia driver from the [Fusion Nonfree Repository](https://rpmfusion.org/Howto/NVIDIA). The Cuda toolkit can be installed from the Nvidia servers. See [Fedora Cuda Instructions](https://rpmfusion.org/Howto/CUDA).
+You will need the Cuda toolkit installed. On Ubuntu:
+
+	sudo apt install nvidia-cuda-toolkit
 
 #### Compiling with Openvino for CPU inference
 
 For CPU inference, you can use [openvino](https://github.com/openvinotoolkit/openvino). Openvino is an Intel project, but it works just fine with AMD CPUs with an x86 architecture. 
-
-I was able to get openvino working with Fedora 40 and openvino toolkit 2023.2.0 (labeled rhel). However, because Fedora 40 changed the packaging for the shared library TBB (Threading Building Blocks), I had to install the development version of tbb and move some of the old tbb files back where they used to be:
-
-    sudo dnf install tbb-doc
-    
-These files were taken from Fedora 39 and copied to their orginal location to make Fedora 40 work:
-
-    /usr/lib64/libtbb.so.2
-    /usr/lib64/libtbbmalloc.so.2
-    /usr/lib64/libtbbmalloc_proxy.so.2
     
 #### Optionally Use Whisperfile
 You can also download a ready-to-go executible from [whiperfile](https://github.com/cjpais/whisperfile), which is based on the work of Mozilla and [llamafile](https://github.com/Mozilla-Ocho/llamafile). They have found a way to "collapses all the complexity of LLMs down to a single-file," and it works on almost any computer.
 
-The performance is probably not quite as good as if you compiled whisper.cpp yourself. When I tested whisperfile with openivo on the CPU, there was about a 30% decrease in speed. One option could be to start using geek-dictation with whisperfile, then if you want that little bit of extra speed, compile your own executible with [whisper.cpp](https://github.com/ggerganov/whisper.cpp) and openvino. This probably only makes sense for CPU inference since compiling for a Cuda enabled GPU is so easy (literally just one command).
+The performance is probably not quite as good as if you compiled whisper.cpp yourself. When I tested whisperfile with openivo on the CPU, there was about a 30% decrease in speed. One option could be to start using geek-dictation with whisperfile, then if you want that little bit of extra speed, compile your own executible with [whisper.cpp](https://github.com/ggerganov/whisper.cpp) and openvino.
 
 ### Install ffmpeg if not already installed
 ffmpeg is used to convert the recorded audio to a whisper compatible audio file (when starting the server, the -convert flag does this). Although the "record.sh" script uses pw-rec to record a wave file, the whisper model uses a very specific type of wave file.
-
-Fedora/RHEL
-
-	sudo dnf install ffmpeg
 	
-Ubuntu
+Ubuntu:
 
 	sudo apt install ffmpeg
 
 ### Install wl-clipboard
 
-Fedora/RHEL
-
-	sudo dnf install wl-clipboard
-
-Ubuntu
+Ubuntu:
 
 	sudo apt install wl-clipboard
 
 ### Get ydotool working
 
 You will need an application that can simulate the keyboard function for pasting the contents of the clipboard into something that is not just a terminal (control+c). I have found that [ydotool](https://github.com/ReimuNotMoe/ydotool) works best for this. Like other projects, I used to use a keyboard simulation app to type all of the converted text. However, because geek-dictation processes all of an audio file at once, it is possible and faster to just paste the converted text into the word processor.
-	
-* Install [ydotool](https://github.com/ReimuNotMoe/ydotool)
 
-* You will also need to set up a dbus service on linux to give the ydotool deamon ongoing permission to run on start up. I cannot reliably list all the steps. Please ask GPT-4 or Claude to walk you through it.
+To install [ydotool](https://github.com/ReimuNotMoe/ydotool) on Wayland, follow these steps:
+
+1. Get dependencies for building project
+
+	sudo apt install git cmake g++ libevdev-dev libudev-dev
+	
+2. Download and build project
+
+	git clone https://github.com/ReimuNotMoe/ydotool.git
+	cd ydotool
+	mkdir build
+	cd build
+	cmake -DBUILD_MANPAGES=OFF ..
+	make -j$(nproc)
+	sudo make install
+
+3. Create a udev rule to write to input directory. Open and modify relevent file:
+
+	sudo gedit /etc/udev/rules.d/99-ydotool.rules
+	
+Paste the following into that file:
+
+	KERNEL=="uinput", GROUP="input", MODE="0660"
+
+4. Reload udev:
+
+	sudo udevadm control --reload-rules
+	sudo udevadm trigger
+
+5. Add your user to input group:
+
+	sudo usermod -aG input <your_user_name>
+	
+6. Reboot
+
+7. Create user systemd service to make changes permanent
+
+	mkdir -p ~/.config/systemd/user
+	gedit ~/.config/systemd/user/ydotoold.service
+	
+Paste the following into that file:
+
+	[Unit]
+	Description=ydotool Daemon (User)
+	# Run after the user session/graphical environment is available
+	After=graphical-session-pre.target
+	Wants=graphical-session-pre.target
+
+	[Service]
+	Type=simple
+	ExecStart=/usr/local/bin/ydotoold
+	Restart=on-failure
+	RestartSec=5
+
+	# Often needed for user services on Wayland to find the right runtime dir
+	Environment=DISPLAY=:0
+	Environment=XDG_RUNTIME_DIR=/run/user/%U
+	# If you have a standard D-Bus session bus:
+	Environment=DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/%U/bus
+	# Some systems define WAYLAND_DISPLAY instead of DISPLAY, so you might need:
+	# Environment=WAYLAND_DISPLAY=wayland-0
+
+	[Install]
+	WantedBy=default.target
+	
+8. Enable and start the user service
+
+	systemctl --user daemon-reload
+	systemctl --user enable --now ydotoold
+	
+9. Check status and test
+
+	systemctl --user status ydotoold
+	ydotool type "Hello from Wayland!"
+	
+If it types the text somewhere (e.g., in your terminal), you’ve confirmed it works on your Wayland setup.
+
+### Ubuntu Permissions Issue
+
+On Ubuntu, users do not have default write permissions for the /dev/shm directory, which stores temporary files in memory. To allow permission, edit this file:
+
+	sudo gedit /etc/fstab
+	
+Please this line at the bottom, save, and reboot:
+
+	tmpfs /dev/shm tmpfs rw,exec,inode64 0 0
 	
 ### Place Geek-Dictation in Home folder
 All of these instructions assume that geek-dictation scripts are in your home folder. For a quick way to so this:
@@ -85,12 +152,8 @@ Make sure the scripts are executable.
 
 ### Program hotkeys with ckb-next
 Install [ckb-next](https://github.com/ckb-next/ckb-next), which is a GUI based app that allows the user to assign functionality to keys or buttons on supported Corsair keyboards or mice.
-
-Fedora/RHEL
-
-	sudo dnf install ckb-next
 	
-Ubuntu
+Ubuntu:
 
 	sudo apt install ckb-next
 	
